@@ -1,0 +1,38 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f8f8f8;
+  margin: 0;
+  padding: 20px;
+}
+
+.App {
+  max-width: 800px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.shipment-form input,
+.shipment-form select {
+  margin-right: 10px;
+  padding: 8px;
+}
+
+.shipment-list {
+  list-style: none;
+  padding: 0;
+}
+
+.shipment-item {
+  background: #fafafa;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+button {
+  margin-right: 6px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
