@@ -112,7 +112,10 @@ export default function ShipmentList() {
                                     >
                                         {shipment.status}
                                     </span>
+                                    {/* Display Shipment ID */}
+                                    <span className="shipment-id">ID: {shipment._id}</span>
                                 </div>
+
                                 <div className="btn-group">
                                     <button
                                         onClick={() => handleEdit(shipment)}

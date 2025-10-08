@@ -99,6 +99,23 @@ form button:hover {
   margin-bottom: 0.5rem;
 }
 
+/* ==== SHIPMENT ID ==== */
+.shipment-id {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: 0.3rem;
+  word-break: break-all;
+}
+
+/* ==== SHIPMENT ID ==== */
+.shipment-id {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: 0.3rem;
+  word-break: break-all;
+}
+
+
 .shipment-info span:first-child {
   font-weight: 600;
   color: #1e293b;
