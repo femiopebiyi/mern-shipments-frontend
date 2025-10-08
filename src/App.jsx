@@ -1,12 +1,8 @@
 import ShipmentList from "./components/ShipmentList";
+import "./index.css";
 
 function App() {
-  return (
-    <div className="App">
-      <h1>Shipment Management System</h1>
-      <ShipmentList />
-    </div>
-  );
+  return <ShipmentList />;
 }
 
 export default App;

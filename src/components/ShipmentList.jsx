@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ShipmentForm from "./ShipmentForm";
 
-function ShipmentList() {
+export default function ShipmentList() {
     const [shipments, setShipments] = useState([]);
     const [editingId, setEditingId] = useState(null);
     const [updatedData, setUpdatedData] = useState({});
@@ -21,12 +21,8 @@ function ShipmentList() {
     }, []);
 
     const handleDelete = async (id) => {
-        try {
-            await axios.delete(`${import.meta.env.VITE_API_URL}/${id}`);
-            fetchShipments();
-        } catch (err) {
-            console.error("Error deleting shipment:", err);
-        }
+        await axios.delete(`${import.meta.env.VITE_API_URL}/${id}`);
+        fetchShipments();
     };
 
     const handleEdit = (shipment) => {
@@ -39,70 +35,103 @@ function ShipmentList() {
     };
 
     const handleUpdate = async (id) => {
-        try {
-            await axios.put(`${import.meta.env.VITE_API_URL}/${id}`, updatedData);
-            setEditingId(null);
-            fetchShipments();
-        } catch (err) {
-            console.error("Error updating shipment:", err);
-        }
+        await axios.put(`${import.meta.env.VITE_API_URL}/${id}`, updatedData);
+        setEditingId(null);
+        fetchShipments();
     };
 
     return (
-        <div className="shipment-container">
-            <h2>Shipments</h2>
+        <div className="app-container">
+            <h1>Shipment Management System</h1>
+
             <ShipmentForm onShipmentAdded={fetchShipments} />
 
-            <ul className="shipment-list">
+            <div>
                 {shipments.map((shipment) => (
-                    <li key={shipment._id} className="shipment-item">
+                    <div key={shipment._id} className="shipment-card">
                         {editingId === shipment._id ? (
-                            <div>
-                                <input
-                                    value={updatedData.origin}
-                                    onChange={(e) =>
-                                        setUpdatedData({ ...updatedData, origin: e.target.value })
-                                    }
-                                />
-                                <input
-                                    value={updatedData.destination}
-                                    onChange={(e) =>
-                                        setUpdatedData({
-                                            ...updatedData,
-                                            destination: e.target.value,
-                                        })
-                                    }
-                                />
-                                <select
-                                    value={updatedData.status}
-                                    onChange={(e) =>
-                                        setUpdatedData({ ...updatedData, status: e.target.value })
-                                    }
-                                >
-                                    <option value="Pending">Pending</option>
-                                    <option value="In Transit">In Transit</option>
-                                    <option value="Delivered">Delivered</option>
-                                </select>
-                                <button onClick={() => handleUpdate(shipment._id)}>Save</button>
-                                <button onClick={() => setEditingId(null)}>Cancel</button>
-                            </div>
+                            <>
+                                <div className="edit-form">
+                                    <input
+                                        value={updatedData.origin}
+                                        onChange={(e) =>
+                                            setUpdatedData({
+                                                ...updatedData,
+                                                origin: e.target.value,
+                                            })
+                                        }
+                                        placeholder="Origin"
+                                    />
+                                    <input
+                                        value={updatedData.destination}
+                                        onChange={(e) =>
+                                            setUpdatedData({
+                                                ...updatedData,
+                                                destination: e.target.value,
+                                            })
+                                        }
+                                        placeholder="Destination"
+                                    />
+                                    <select
+                                        value={updatedData.status}
+                                        onChange={(e) =>
+                                            setUpdatedData({
+                                                ...updatedData,
+                                                status: e.target.value,
+                                            })
+                                        }
+                                    >
+                                        <option>Pending</option>
+                                        <option>In Transit</option>
+                                        <option>Delivered</option>
+                                    </select>
+                                </div>
+                                <div className="btn-group">
+                                    <button
+                                        onClick={() => handleUpdate(shipment._id)}
+                                        className="btn save"
+                                    >
+                                        Save
+                                    </button>
+                                    <button
+                                        onClick={() => setEditingId(null)}
+                                        className="btn cancel"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </>
                         ) : (
-                            <div>
-                                <strong>{shipment.origin}</strong> → {shipment.destination} <br />
-                                <small>Status: {shipment.status}</small>
-                                <div>
-                                    <button onClick={() => handleEdit(shipment)}>Edit</button>
-                                    <button onClick={() => handleDelete(shipment._id)}>
+                            <>
+                                <div className="shipment-info">
+                                    <span>
+                                        {shipment.origin} → {shipment.destination}
+                                    </span>
+                                    <span
+                                        className={`status ${shipment.status.replace(/\s/g, "-")}`}
+                                    >
+                                        {shipment.status}
+                                    </span>
+                                </div>
+                                <div className="btn-group">
+                                    <button
+                                        onClick={() => handleEdit(shipment)}
+                                        className="btn edit"
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(shipment._id)}
+                                        className="btn delete"
+                                    >
                                         Delete
                                     </button>
                                 </div>
-                            </div>
+                            </>
                         )}
-                    </li>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
 }
-
-export default ShipmentList;
