@@ -44,39 +44,25 @@ export default function ShipmentForm({ onCreated }) {
       <h3>Add New Shipment</h3>
 
       <label>Origin:</label>
-      <input
-        type="text"
-        value={origin}
-        onChange={(e) => setOrigin(e.target.value)}
-        required
-      />
+      <input value={origin} onChange={(e) => setOrigin(e.target.value)} required />
 
       <label>Destination:</label>
-      <input
-        type="text"
-        value={destination}
-        onChange={(e) => setDestination(e.target.value)}
-        required
-      />
+      <input value={destination} onChange={(e) => setDestination(e.target.value)} required />
 
       <label>Status:</label>
       <select value={status} onChange={(e) => setStatus(e.target.value)}>
         <option value="Pending">Pending</option>
         <option value="In Transit">In Transit</option>
         <option value="Delivered">Delivered</option>
-        <option value="Cancelled">Cancelled</option>
+        {/* <option value="Cancelled">Cancelled</option> */}
       </select>
 
-      <label>Notes:</label>
-      <textarea
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-        placeholder="Optional notes"
-      ></textarea>
+
 
       <button type="submit" disabled={loading}>
         {loading ? "Saving..." : "Create Shipment"}
       </button>
     </form>
+
   );
 }

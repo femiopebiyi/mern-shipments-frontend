@@ -1,6 +1,11 @@
 // src/utils/api.js
 const BASE_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "";
 
+// 🔍 Debug log: confirm API base URL during build/runtime
+if (typeof window !== "undefined") {
+    console.log("🔗 API Base URL (from .env):", BASE_URL);
+}
+
 export async function fetchJson(path, opts = {}) {
     const url = path.startsWith("http") ? path : `${BASE_URL}${path}`;
     const res = await fetch(url, {
@@ -8,14 +13,13 @@ export async function fetchJson(path, opts = {}) {
         ...opts,
     });
 
-    // Try to parse JSON; handle HTML fallback
     const text = await res.text();
     let json;
     try {
         json = JSON.parse(text);
     } catch {
         throw new Error(
-            `Expected JSON but got: ${text.slice(0, 50)}... (check your API URL or server routes)`
+            `Expected JSON but got: ${text.slice(0, 60)}... (check your API URL or server routes)`
         );
     }
 
