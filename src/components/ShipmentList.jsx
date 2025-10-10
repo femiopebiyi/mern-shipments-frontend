@@ -1,140 +1,56 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import ShipmentForm from "./ShipmentForm";
+// src/components/ShipmentList.jsx
+import React, { useEffect, useState } from "react";
+import { fetchJson } from "../utils/api";
 
 export default function ShipmentList() {
     const [shipments, setShipments] = useState([]);
-    const [editingId, setEditingId] = useState(null);
-    const [updatedData, setUpdatedData] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const fetchShipments = async () => {
+    const load = async () => {
         try {
-            const res = await axios.get(import.meta.env.VITE_API_URL);
-            setShipments(res.data);
+            setLoading(true);
+            const res = await fetchJson("/api/shipments");
+            setShipments(res.data || []);
+            setError(null);
         } catch (err) {
-            console.error("Error fetching shipments:", err);
+            setError(err.message || "Failed to load shipments");
+        } finally {
+            setLoading(false);
         }
     };
 
-    useEffect(() => {
-        fetchShipments();
-    }, []);
+    useEffect(() => { load(); }, []);
 
     const handleDelete = async (id) => {
-        await axios.delete(`${import.meta.env.VITE_API_URL}/${id}`);
-        fetchShipments();
+        if (!confirm("Delete this shipment?")) return;
+        try {
+            await fetchJson(`/api/shipments/${id}`, { method: "DELETE" });
+            // remove from local state without refetching entire list
+            setShipments(prev => prev.filter(s => s._id !== id));
+        } catch (err) {
+            alert(err.message || "Delete failed");
+        }
     };
 
-    const handleEdit = (shipment) => {
-        setEditingId(shipment._id);
-        setUpdatedData({
-            origin: shipment.origin,
-            destination: shipment.destination,
-            status: shipment.status,
-        });
-    };
-
-    const handleUpdate = async (id) => {
-        await axios.put(`${import.meta.env.VITE_API_URL}/${id}`, updatedData);
-        setEditingId(null);
-        fetchShipments();
-    };
+    if (loading) return <div>Loading shipments…</div>;
+    if (error) return <div style={{ color: "red" }}>{error}</div>;
+    if (shipments.length === 0) return <div>No shipments yet — add one.</div>;
 
     return (
-        <div className="app-container">
-            <h1>Shipment Management System</h1>
-
-            <ShipmentForm onShipmentAdded={fetchShipments} />
-
-            <div>
-                {shipments.map((shipment) => (
-                    <div key={shipment._id} className="shipment-card">
-                        {editingId === shipment._id ? (
-                            <>
-                                <div className="edit-form">
-                                    <input
-                                        value={updatedData.origin}
-                                        onChange={(e) =>
-                                            setUpdatedData({
-                                                ...updatedData,
-                                                origin: e.target.value,
-                                            })
-                                        }
-                                        placeholder="Origin"
-                                    />
-                                    <input
-                                        value={updatedData.destination}
-                                        onChange={(e) =>
-                                            setUpdatedData({
-                                                ...updatedData,
-                                                destination: e.target.value,
-                                            })
-                                        }
-                                        placeholder="Destination"
-                                    />
-                                    <select
-                                        value={updatedData.status}
-                                        onChange={(e) =>
-                                            setUpdatedData({
-                                                ...updatedData,
-                                                status: e.target.value,
-                                            })
-                                        }
-                                    >
-                                        <option>Pending</option>
-                                        <option>In Transit</option>
-                                        <option>Delivered</option>
-                                    </select>
-                                </div>
-                                <div className="btn-group">
-                                    <button
-                                        onClick={() => handleUpdate(shipment._id)}
-                                        className="btn save"
-                                    >
-                                        Save
-                                    </button>
-                                    <button
-                                        onClick={() => setEditingId(null)}
-                                        className="btn cancel"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <div className="shipment-info">
-                                    <span>
-                                        {shipment.origin} → {shipment.destination}
-                                    </span>
-                                    <span
-                                        className={`status ${shipment.status.replace(/\s/g, "-")}`}
-                                    >
-                                        {shipment.status}
-                                    </span>
-                                    {/* Display Shipment ID */}
-                                    <span className="shipment-id">ID: {shipment._id}</span>
-                                </div>
-
-                                <div className="btn-group">
-                                    <button
-                                        onClick={() => handleEdit(shipment)}
-                                        className="btn edit"
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(shipment._id)}
-                                        className="btn delete"
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            </>
-                        )}
+        <div>
+            {shipments.map(s => (
+                <div key={s._id} className="shipment-card">
+                    <div><strong>ID:</strong> {s._id}</div>
+                    <div><strong>Origin:</strong> {s.origin}</div>
+                    <div><strong>Destination:</strong> {s.destination}</div>
+                    <div><strong>Status:</strong> {s.status}</div>
+                    <div>
+                        <button onClick={() => /* open edit form with s */ null}>Edit</button>
+                        <button onClick={() => handleDelete(s._id)}>Delete</button>
                     </div>
-                ))}
-            </div>
+                </div>
+            ))}
         </div>
     );
 }
