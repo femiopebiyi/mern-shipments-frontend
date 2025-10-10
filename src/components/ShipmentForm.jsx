@@ -42,27 +42,32 @@ export default function ShipmentForm({ onCreated }) {
   return (
     <form onSubmit={handleSubmit} className="shipment-form">
       <h3>Add New Shipment</h3>
+      <div>
+        <label>Origin:</label>
+        <input value={origin} onChange={(e) => setOrigin(e.target.value)} required />
+      </div>
+      <div>
+        <label>Destination:</label>
+        <input value={destination} onChange={(e) => setDestination(e.target.value)} required />
+      </div>
+      <div>
+        <label>Status:</label>
+        <select value={status} onChange={(e) => setStatus(e.target.value)}>
+          <option value="Pending">Pending</option>
+          <option value="In Transit">In Transit</option>
+          <option value="Delivered">Delivered</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
 
-      <label>Origin:</label>
-      <input value={origin} onChange={(e) => setOrigin(e.target.value)} required />
-
-      <label>Destination:</label>
-      <input value={destination} onChange={(e) => setDestination(e.target.value)} required />
-
-      <label>Status:</label>
-      <select value={status} onChange={(e) => setStatus(e.target.value)}>
-        <option value="Pending">Pending</option>
-        <option value="In Transit">In Transit</option>
-        <option value="Delivered">Delivered</option>
-        <option value="Cancelled">Cancelled</option>
-      </select>
-
-      <label>Notes:</label>
-      <textarea
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-        placeholder="Optional notes"
-      ></textarea>
+      <div>
+        <label>Notes:</label>
+        <textarea
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          placeholder="Optional notes"
+        ></textarea>
+      </div>
 
       <button type="submit" disabled={loading}>
         {loading ? "Saving..." : "Create Shipment"}
