@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ShipmentForm from "./components/ShipmentForm";
 import ShipmentList from "./components/ShipmentList";
 import "./index.css";

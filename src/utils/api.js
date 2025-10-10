@@ -1,4 +1,3 @@
-// src/utils/api.js
 const BASE_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "";
 
 // 🔍 Debug log: confirm API base URL during build/runtime
