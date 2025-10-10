@@ -10,7 +10,7 @@ export default function ShipmentList() {
     const load = async () => {
         try {
             setLoading(true);
-            const res = await fetchJson("/api/shipments");
+            const res = await fetchJson("/shipments");
             setShipments(res.data || []);
             setError(null);
         } catch (err) {
@@ -25,7 +25,7 @@ export default function ShipmentList() {
     const handleDelete = async (id) => {
         if (!confirm("Delete this shipment?")) return;
         try {
-            await fetchJson(`/api/shipments/${id}`, { method: "DELETE" });
+            await fetchJson(`/shipments/${id}`, { method: "DELETE" });
             // remove from local state without refetching entire list
             setShipments(prev => prev.filter(s => s._id !== id));
         } catch (err) {
